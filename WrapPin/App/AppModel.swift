@@ -41,6 +41,7 @@ final class AppModel {
     private(set) var isStartingLocationSession = false
     // Set by App Shortcuts and performed by HomeView with the same code as its buttons.
     var shortcutRequest: ShortcutRequest?
+    var shortcutAutomationTargetID: String?
 
     private var activeSessionRecovery: SessionRecoveryRecord?
     private var pendingSessionRecovery: SessionRecoveryRecord?
@@ -647,6 +648,7 @@ final class AppModel {
     }
 
     func stopLocationSession() {
+        shortcutAutomationTargetID = nil
         if cancelPendingLocationPreparation() { return }
         isStoppingLocationSessionForRestoration = true
         deviceSession.stop()

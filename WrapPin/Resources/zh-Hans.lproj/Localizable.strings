@@ -840,3 +840,20 @@
 "Map Controls" = "地图控制";
 "Hide Controls" = "收起控制面板";
 "Show Controls" = "显示控制面板";
+
+// Favourite automation workflow
+"Favourite → Feishu → Restore" = "收藏点 → 飞书 → 恢复位置";
+"Create a shortcut with these actions in order. Choose WrapPin under Apps to find the preparation and wait actions." = "按下面的顺序新建快捷指令。在「App」中选择 WrapPin，找到准备和等待动作。";
+"1. Prepare Favourite Automation — choose a favourite, or Ask Each Time." = "1. 准备收藏点自动化：选择收藏点，或设为「每次询问」。";
+"2. If the preparation result is true, Set Cellular Data to Off. End If." = "2. 如果准备结果为真，将「设置蜂窝数据」设为关闭，然后结束如果。";
+"3. Wait for Favourite Simulation. Save its Boolean result for step 5." = "3. 等待收藏点模拟。保留此动作的布尔结果，供第 5 步使用。";
+"4. Set Cellular Data to On, regardless of the wait result." = "4. 无论等待结果如何，都将「设置蜂窝数据」设为开启。";
+"5. If the wait result is true: Open App → Feishu, then Wait → 5 seconds. End If." = "5. 如果第 3 步的等待结果为真：打开 App → 飞书，然后等待 → 5 秒，再结束如果。";
+"6. Stop and Restore Real Location (outside the If block)." = "6. 停止并恢复真实位置（放在如果之外）。";
+"This workflow ends with cellular data on. Keep the iPhone unlocked. If you cancel the shortcut or iOS interrupts it, turn cellular data back on and run Restore Real Location manually. Five seconds does not confirm that Feishu has obtained a location." = "此流程结束时蜂窝数据为开启状态。运行时保持 iPhone 解锁。如果取消快捷指令或被系统中断，请手动重新开启蜂窝数据并运行「恢复真实位置」。等待五秒不代表飞书已经获取位置。";
+"Connection preparation timed out. Check WrapPin and try again." = "连接准备超时。请检查 WrapPin 后重试。";
+"Prepare Favourite Automation" = "准备收藏点自动化";
+"Starts a favourite and waits until cellular data should be turned off or simulation is active. Returns true only when cellular data needs to be turned off." = "开始模拟收藏点，等待到需要关闭蜂窝数据或模拟成功。仅在需要关闭蜂窝数据时返回真。";
+"Prepare automation for ${place}" = "为 ${place} 准备自动化";
+"Wait for Favourite Simulation" = "等待收藏点模拟";
+"Waits up to 25 seconds for the prepared favourite. Returns false on failure or timeout. Restore cellular data immediately after this action, before checking its result." = "等待已准备的收藏点模拟，最多 25 秒。失败或超时返回假。请在此动作后立即开启蜂窝数据，再判断结果。";
