@@ -53,3 +53,43 @@ struct RestoreRealLocationIntent: AppIntent {
         }
     }
 }
+
+// Composable actions: Shortcuts owns system settings and launching other apps.
+struct PrepareFavouriteAutomationIntent: AppIntent {
+    static let title: LocalizedStringResource = "Prepare Favourite Automation"
+    static let description = IntentDescription("Starts a favourite and waits until cellular data should be turned off or simulation is active. Returns true only when cellular data needs to be turned off.")
+    static let openAppWhenRun = true
+
+    @available(iOS 26, *)
+    static let supportedModes: IntentModes = .foreground(.immediate)
+
+    @Parameter(title: "Favourite Place")
+    var place: FavouritePlaceEntity
+
+    @Dependency private var appModel: AppModel
+
+    static var parameterSummary: some ParameterSummary {
+        Summary("Prepare automation for \(\.$place)")
+    }
+
+    @MainActor
+    func perform() async throws -> some IntentResult & ReturnsValue<Bool> {
+        .result(value: try await appModel.prepareShortcutAutomation(favouriteID: place.id))
+    }
+}
+
+struct WaitForFavouriteAutomationIntent: AppIntent {
+    static let title: LocalizedStringResource = "Wait for Favourite Simulation"
+    static let description = IntentDescription("Waits up to 25 seconds for the prepared favourite. Returns false on failure or timeout. Restore cellular data immediately after this action, before checking its result.")
+    static let openAppWhenRun = true
+
+    @available(iOS 26, *)
+    static let supportedModes: IntentModes = .foreground(.immediate)
+
+    @Dependency private var appModel: AppModel
+
+    @MainActor
+    func perform() async throws -> some IntentResult & ReturnsValue<Bool> {
+        .result(value: await appModel.waitForShortcutAutomation())
+    }
+}

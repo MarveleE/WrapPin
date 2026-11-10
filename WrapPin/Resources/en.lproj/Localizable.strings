@@ -194,3 +194,20 @@
 "The VPN configuration changed. Close this page and try again." = "The VPN configuration changed. Close this page and try again.";
 "Could not start the built-in tunnel (%@). Check VPN approval and signing permissions, then try again." = "Could not start the built-in tunnel (%@). Check VPN approval and signing permissions, then try again.";
 "iOS could not read or save the VPN configuration. Check VPN approval and the app and extension signing profiles, then try again." = "iOS could not read or save the VPN configuration. Check VPN approval and the app and extension signing profiles, then try again.";
+
+// Favourite automation workflow
+"Favourite → Feishu → Restore" = "Favourite → Feishu → Restore";
+"Create a shortcut with these actions in order. Choose WrapPin under Apps to find the preparation and wait actions." = "Create a shortcut with these actions in order. Choose WrapPin under Apps to find the preparation and wait actions.";
+"1. Prepare Favourite Automation — choose a favourite, or Ask Each Time." = "1. Prepare Favourite Automation — choose a favourite, or Ask Each Time.";
+"2. If the preparation result is true, Set Cellular Data to Off. End If." = "2. If the preparation result is true, Set Cellular Data to Off. End If.";
+"3. Wait for Favourite Simulation. Save its Boolean result for step 5." = "3. Wait for Favourite Simulation. Save its Boolean result for step 5.";
+"4. Set Cellular Data to On, regardless of the wait result." = "4. Set Cellular Data to On, regardless of the wait result.";
+"5. If the wait result is true: Open App → Feishu, then Wait → 5 seconds. End If." = "5. If the wait result is true: Open App → Feishu, then Wait → 5 seconds. End If.";
+"6. Stop and Restore Real Location (outside the If block)." = "6. Stop and Restore Real Location (outside the If block).";
+"This workflow ends with cellular data on. Keep the iPhone unlocked. If you cancel the shortcut or iOS interrupts it, turn cellular data back on and run Restore Real Location manually. Five seconds does not confirm that Feishu has obtained a location." = "This workflow ends with cellular data on. Keep the iPhone unlocked. If you cancel the shortcut or iOS interrupts it, turn cellular data back on and run Restore Real Location manually. Five seconds does not confirm that Feishu has obtained a location.";
+"Connection preparation timed out. Check WrapPin and try again." = "Connection preparation timed out. Check WrapPin and try again.";
+"Prepare Favourite Automation" = "Prepare Favourite Automation";
+"Starts a favourite and waits until cellular data should be turned off or simulation is active. Returns true only when cellular data needs to be turned off." = "Starts a favourite and waits until cellular data should be turned off or simulation is active. Returns true only when cellular data needs to be turned off.";
+"Prepare automation for ${place}" = "Prepare automation for ${place}";
+"Wait for Favourite Simulation" = "Wait for Favourite Simulation";
+"Waits up to 25 seconds for the prepared favourite. Returns false on failure or timeout. Restore cellular data immediately after this action, before checking its result." = "Waits up to 25 seconds for the prepared favourite. Returns false on failure or timeout. Restore cellular data immediately after this action, before checking its result.";

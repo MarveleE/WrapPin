@@ -44,6 +44,17 @@ struct ShortcutsGuideView: View {
             }
             .foregroundStyle(.secondary)
 
+            Section("Favourite → Feishu → Restore") {
+                Text("Create a shortcut with these actions in order. Choose WrapPin under Apps to find the preparation and wait actions.")
+                Text("1. Prepare Favourite Automation — choose a favourite, or Ask Each Time.")
+                Text("2. If the preparation result is true, Set Cellular Data to Off. End If.")
+                Text("3. Wait for Favourite Simulation. Save its Boolean result for step 5.")
+                Text("4. Set Cellular Data to On, regardless of the wait result.")
+                Text("5. If the wait result is true: Open App → Feishu, then Wait → 5 seconds. End If.")
+                Text("6. Stop and Restore Real Location (outside the If block).")
+                Text("This workflow ends with cellular data on. Keep the iPhone unlocked. If you cancel the shortcut or iOS interrupts it, turn cellular data back on and run Restore Real Location manually. Five seconds does not confirm that Feishu has obtained a location.")
+            }
+
             Section("Automation") {
                 Text("In the Shortcuts app, open Automation, create a personal automation such as Arrive, Leave or Time of Day, then add a WrapPin action.")
                     .foregroundStyle(.secondary)

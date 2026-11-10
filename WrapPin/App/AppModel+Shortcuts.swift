@@ -27,6 +27,7 @@ enum ShortcutFailure: Error, CustomLocalizedStringResourceConvertible {
     case routeActive
     case busy
     case stopFailed(String)
+    case automationTimedOut
     case stillRunning
 
     var localizedStringResource: LocalizedStringResource {
@@ -46,6 +47,8 @@ enum ShortcutFailure: Error, CustomLocalizedStringResourceConvertible {
         case .stopFailed(let message):
             // The message is already localized by the session coordinator.
             LocalizedStringResource(stringLiteral: message)
+        case .automationTimedOut:
+            LocalizedStringResource("Connection preparation timed out. Check WrapPin and try again.")
         case .stillRunning:
             LocalizedStringResource("Restoring is still in progress. Check WrapPin for the result.")
         }
@@ -62,7 +65,7 @@ extension AppModel {
             throw ShortcutFailure.favouriteMissing
         }
         guard !isRunningRouteSession else { throw ShortcutFailure.routeActive }
-        guard !isStartingLocationSession, !isRestoringInterruptedSession, !deviceSession.isBusy else {
+        guard shortcutRequest == nil, !isStartingLocationSession, !isRestoringInterruptedSession, !deviceSession.isBusy else {
             throw ShortcutFailure.busy
         }
 
@@ -70,9 +73,70 @@ extension AppModel {
         return target
     }
 
+    /// Returns whether the workflow needs to turn cellular data off. No cellular
+    /// setting has changed yet, so preparation errors can safely stop Shortcuts.
+    func prepareShortcutAutomation(favouriteID: String) async throws -> Bool {
+        guard !hasLiveLocationSession, shortcutAutomationTargetID == nil else {
+            throw ShortcutFailure.busy
+        }
+        let target = try await requestShortcutStart(favouriteID: favouriteID)
+        // Execute the same model operation directly so the wait cannot observe an
+        // old terminal phase between HomeView consuming the request and starting.
+        shortcutRequest = nil
+        shortcutAutomationTargetID = target.id
+        await startLocationSession(at: target, coordinateMode: coordinateMode(for: target))
+        do {
+            let deadline = ContinuousClock.now + .seconds(25)
+            while ContinuousClock.now < deadline {
+                try Task.checkCancellation()
+                if case .active(let active) = deviceSession.phase, active.id == target.id {
+                    return false
+                }
+                if deviceSession.mobileDataGuidance == .connectionHelp {
+                    deviceSession.useMobileDataGuidance()
+                }
+                if deviceSession.mobileDataGuidance == .turnOff { return true }
+                switch deviceSession.phase {
+                case .failed(let message): throw ShortcutFailure.stopFailed(message)
+                case .idle: throw ShortcutFailure.automationTimedOut
+                default: break
+                }
+                try await Task.sleep(for: .milliseconds(200))
+            }
+            throw ShortcutFailure.automationTimedOut
+        } catch {
+            shortcutAutomationTargetID = nil
+            stopLocationSession()
+            throw error
+        }
+    }
+
+    /// Always returns a Boolean on connection failure/timeout, allowing the next
+    /// system action to turn cellular data back on before branching on the result.
+    /// System cancellation/termination still cannot guarantee subsequent actions.
+    func waitForShortcutAutomation() async -> Bool {
+        guard let targetID = shortcutAutomationTargetID else { return false }
+        defer { shortcutAutomationTargetID = nil }
+        deviceSession.confirmMobileDataIsOff()
+        let deadline = ContinuousClock.now + .seconds(25)
+        while ContinuousClock.now < deadline, !Task.isCancelled {
+            if case .active(let target) = deviceSession.phase {
+                return target.id == targetID && !isRunningRouteSession
+            }
+            switch deviceSession.phase {
+            case .idle, .failed, .stopping: return false
+            default: break
+            }
+            do { try await Task.sleep(for: .milliseconds(200)) }
+            catch { return false }
+        }
+        return false
+    }
+
     /// Stops the running simulation, or restores the real location after an
     /// interrupted one, and waits until the device answers.
     func performShortcutStop() async throws -> ShortcutStopOutcome {
+        shortcutAutomationTargetID = nil
         try await waitForShortcutReadiness()
 
         if interruptedSession != nil, !hasLiveLocationSession {

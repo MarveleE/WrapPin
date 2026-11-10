@@ -1,0 +1,40 @@
+{
+  "version": "1.0.21",
+  "build": 72,
+  "signed": false,
+  "packages": [
+    {
+      "file": "WrapPin-Standard-1.0.21-build72-unsigned.ipa",
+      "bytes": 6938442,
+      "sha256": "d3e99147784deb39507df962a874fd46783afaa936b36980bb85a8c65cfc92a3"
+    },
+    {
+      "file": "WrapPin-Tunnel-1.0.21-build72-unsigned.ipa",
+      "bytes": 6992312,
+      "sha256": "25ea8d5be6f64efe3e3e637822467fb1541fc925bdd38296bf05c472c3b6cc8a"
+    }
+  ],
+  "checks": [
+    "Both Release archives succeeded",
+    "IPA ZIP integrity",
+    "App and extension build 72",
+    "Automation intents present",
+    "Offline automation behavior tests passed",
+    "Localization passed"
+  ],
+  "physical_installation": "CHENn: Build 72 installed and queried successfully",
+  "physical_testing": "not performed; Device panel does not expose connected physical iPhone",
+  "chenn_installation": {
+    "device": "CHENn",
+    "bundle_id": "com.magicgroot.wrappin.selfsigned",
+    "version": "1.0.21",
+    "build": "72",
+    "installed": true,
+    "verified_by": "devicectl installed-app query",
+    "signing": "Existing Build 41 signing identity and profiles reused; code signature verified",
+    "signed_ipa": "WrapPin-Tunnel-1.0.21-build72-CHENn-signed.ipa",
+    "sha256": "15453936eec8f2a6761e4c247d17401e713cd2d6133c5bd6fff7d3851c07ca18",
+    "shortcut": "Shortcuts/WrapPin-CHENn-Feishu.shortcut",
+    "ui_test": "Not performed: Device panel cannot expose physical CHENn"
+  }
+}
